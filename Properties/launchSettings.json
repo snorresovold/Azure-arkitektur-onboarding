@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "Azure_arkitektur_onboarding": {
+      "commandName": "Project",
+      "commandLineArgs": "--port 7026",
+      "launchBrowser": false
+    }
+  }
+}
