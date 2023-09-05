@@ -1,4 +1,5 @@
 using System;
+using Azure.Storage.Blobs;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 
@@ -19,7 +20,6 @@ namespace Company.Function
             _logger.LogInformation($"C# Timer trigger function executed at: {DateTime.Now}");
         }
     }
-
     public class MyInfo
     {
         public MyScheduleStatus ScheduleStatus { get; set; }
