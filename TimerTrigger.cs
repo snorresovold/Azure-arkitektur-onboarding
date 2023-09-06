@@ -29,13 +29,6 @@ namespace Company.Function
             BlobClient blobClient = blobContainer.GetBlobClient(fileName);
             //await blobClient.DownloadAsync(@"C:/Desktop");
            MemoryStream memoryStream = new MemoryStream();
-            if (await blobClient.ExistsAsync()){
-                
-                //Download file from blob and parse to XLWorkbook
-                await blobClient.DownloadToAsync(memoryStream);
-                _logger.LogInformation("Downloaded blob: " + fileName + " from azure blob container.");
-                using var excelWbook = new XLWorkbook(memoryStream);
-        }
     }
     public class MyInfo
     {
