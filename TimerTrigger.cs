@@ -28,8 +28,13 @@ namespace Company.Function
             BlobContainerClient blobContainer = new(connectionString, containerName);
             BlobClient blobClient = blobContainer.GetBlobClient(fileName);
             //await blobClient.DownloadAsync(@"C:/Desktop");
-            blobClient.DownloadTo("/tmp/test.xlsx");
-            _logger.LogInformation($"{File.ReadAllText("/tmp/test.xlsx")}");
+           MemoryStream memoryStream = new MemoryStream();
+            if (await blobClient.ExistsAsync()){
+                
+                //Download file from blob and parse to XLWorkbook
+                await blobClient.DownloadToAsync(memoryStream);
+                _logger.LogInformation("Downloaded blob: " + fileName + " from azure blob container.");
+                using var excelWbook = new XLWorkbook(memoryStream);
         }
     }
     public class MyInfo
