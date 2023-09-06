@@ -1,5 +1,7 @@
 using System;
+using System.IO; // Added for Stream and File classes
 using Azure.Storage.Blobs;
+using Azure.Storage.Blobs.Models;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 
@@ -12,12 +14,21 @@ namespace Company.Function
         public TimerTrigger(ILoggerFactory loggerFactory)
         {
             _logger = loggerFactory.CreateLogger<TimerTrigger>();
+
         }
 
         [Function("TimerTrigger")]
-        public void Run([TimerTrigger("*/10 * * * * *")] MyInfo myTimer)
+        public async Task RunAsync([TimerTrigger("*/10 * * * * *")] MyInfo myTimer)
         {
             _logger.LogInformation($"C# Timer trigger function executed at: {DateTime.Now}");
+
+            string connectionString = "DefaultEndpointsProtocol=https;AccountName=storageaccountsnorre;AccountKey=qdUxk/A+8WI9S0+XTSzxlH7tE3OYFkWKFIDW0ia0NUSCQn3Us1Q/trOOfxk67l8ZRIjaeHwaNZk5+ASt2kzhhA==;EndpointSuffix=core.windows.net";
+            string containerName = "containtersnorre";
+            string fileName = "exampleTransferSheet.xlsx";
+            BlobContainerClient blobContainer = new(connectionString, containerName);
+            BlobClient blobClient = blobContainer.GetBlobClient(fileName);
+            //await blobClient.DownloadAsync(@"C:/Desktop");
+            blobClient.DownloadTo("/tmp/test.txt");
         }
     }
     public class MyInfo
