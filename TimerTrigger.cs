@@ -28,7 +28,8 @@ namespace Company.Function
             BlobContainerClient blobContainer = new(connectionString, containerName);
             BlobClient blobClient = blobContainer.GetBlobClient(fileName);
             //await blobClient.DownloadAsync(@"C:/Desktop");
-            blobClient.DownloadTo("/tmp/test.txt");
+            blobClient.DownloadTo("/tmp/test.xlsx");
+            _logger.LogInformation($"{File.ReadAllText("/tmp/test.xlsx")}");
         }
     }
     public class MyInfo
