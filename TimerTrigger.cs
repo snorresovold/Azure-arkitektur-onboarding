@@ -5,6 +5,7 @@ using Azure.Storage.Blobs.Models;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 using ClosedXML.Excel;
+using Newtonsoft.Json.Linq;
 
 
 namespace Company.Function
@@ -45,7 +46,33 @@ namespace Company.Function
                 //Todo: Read through each row in the excel sheet and create list of TimeTrackingEntry to send to POG
                 //Todo: Close connection to blob
             }
+            string pogEndnpoint = "https://api-demo.poweroffice.net/";
+            string clientId = "3c04c56d-90b6-43a9-8c4a-d61cfb593f5c";
+            string clientSecret = "67705ed4-5753-4294-a64e-ec70647427e0";
+            byte[] basicAuth = System.Text.Encoding.UTF8.GetBytes(clientId + ":" + clientSecret);
+            string basicAuthEncoded = System.Convert.ToBase64String(basicAuth);
+            //Create http token client and set basic auth header
+            var httpTokenClient = new HttpClient() {
+                BaseAddress = new Uri(pogEndnpoint)
+            };
+            httpTokenClient.DefaultRequestHeaders.Add("Authorization", "Basic " + basicAuthEncoded);
+            //POG API doc specifies: "Set the content type header to be 'application/x-www-form-urlencoded' and body must contain 'grant_type=client_credentials'"
+            HttpContent data = new FormUrlEncodedContent(new Dictionary<string,string>
+            {
+                {"grant_type", "client_credentials"}
+            });
+
+            //Request token and parse response to get the access token
+            HttpResponseMessage tokenResponse = httpTokenClient.PostAsync(pogEndnpoint + "/OAuth/Token",data).Result;
+            string jsonString = await tokenResponse.Content.ReadAsStringAsync();
+            string accessToken = (string)JObject.Parse(jsonString)["access_token"];
             
+
+            //Create client for get and post requests towards POG
+            var httpClient = new HttpClient() {
+                BaseAddress = new Uri(pogEndnpoint)
+            };
+
     }
     public class MyInfo
     {
