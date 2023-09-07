@@ -38,10 +38,14 @@ namespace Company.Function
                 await blobClient.DownloadToAsync(memoryStream);
                 _logger.LogInformation("Downloaded blob: " + fileName + " from azure blob container.");
                 using var excelWbook = new XLWorkbook(memoryStream);
-
-                //Read heading of excel worksheet
                 var excelWSheet = excelWbook.Worksheet("Ark1");
-                string cellContent = excelWSheet.Cell("A1").GetValue<string>();
+                foreach (Range item in excelWbook.Cells)
+                {
+                    _logger.LogInformation(item);
+                }
+                //Read heading of excel worksheet
+                //string cellContent = excelWSheet.Cell("A3").GetValue<string>();
+
                 //Todo: Create object TimeTrackingEntry we can read the excel data into
                 //Todo: Read through each row in the excel sheet and create list of TimeTrackingEntry to send to POG
                 //Todo: Close connection to blob
@@ -72,14 +76,6 @@ namespace Company.Function
             var httpClient = new HttpClient() {
                 BaseAddress = new Uri(pogEndnpoint)
             };
-            //Get all time tracking entries from POG
-            httpClient.DefaultRequestHeaders.Add("Authorization", "Bearer " + accessToken);
-            httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/json; charset=utf-8");
-            HttpResponseMessage getResponse = httpClient.GetAsync(pogEndnpoint + "/TimeTracking/TimeTrackingEntry/").Result;
-            string jsonEntries = await getResponse.Content.ReadAsStringAsync();
-
-
-            _logger.LogInformation(jsonEntries);
 
     }
     public class MyInfo
