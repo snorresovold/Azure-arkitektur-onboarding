@@ -72,6 +72,14 @@ namespace Company.Function
             var httpClient = new HttpClient() {
                 BaseAddress = new Uri(pogEndnpoint)
             };
+            //Get all time tracking entries from POG
+            httpClient.DefaultRequestHeaders.Add("Authorization", "Bearer " + accessToken);
+            httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/json; charset=utf-8");
+            HttpResponseMessage getResponse = httpClient.GetAsync(pogEndnpoint + "/TimeTracking/TimeTrackingEntry/").Result;
+            string jsonEntries = await getResponse.Content.ReadAsStringAsync();
+
+
+            _logger.LogInformation(jsonEntries);
 
     }
     public class MyInfo
