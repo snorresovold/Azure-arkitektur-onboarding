@@ -27,24 +27,34 @@ namespace Company.Function
 
             string connectionString = "DefaultEndpointsProtocol=https;AccountName=storageaccountsnorre;AccountKey=qdUxk/A+8WI9S0+XTSzxlH7tE3OYFkWKFIDW0ia0NUSCQn3Us1Q/trOOfxk67l8ZRIjaeHwaNZk5+ASt2kzhhA==;EndpointSuffix=core.windows.net";
             string containerName = "containtersnorre";
-            string fileName = "exampleTransferSheet.xlsx";
+            string fileName = "exampleTransferSheet.csv";
             //Create blob client for our file
             BlobContainerClient blobContainer = new BlobContainerClient(connectionString, containerName);
             BlobClient blobClient = blobContainer.GetBlobClient(fileName);
             MemoryStream memoryStream = new MemoryStream();
-            if (await blobClient.ExistsAsync()){
-                
+            if (await blobClient.ExistsAsync())
+            {
+
                 //Download file from blob and parse to XLWorkbook
-                await blobClient.DownloadToAsync(memoryStream);
+                blobClient.DownloadTo("/tmp/test.csv"); ;
                 _logger.LogInformation("Downloaded blob: " + fileName + " from azure blob container.");
-                using var excelWbook = new XLWorkbook(memoryStream);
-                var excelWSheet = excelWbook.Worksheet("Ark1");
-                foreach (Range item in excelWbook.Cells)
+                // convert stream to string
+                using (var reader = new StreamReader("/tmp/test.csv"))
                 {
-                    _logger.LogInformation(item);
+                    List<string> listA = new List<string>();
+                    List<string> listB = new List<string>();
+                    while (!reader.EndOfStream)
+                    {
+                        var line = reader.ReadLine();
+                        var values = line.Split(';');
+
+                        listA.Add(values[0]);
+                        listB.Add(values[1]);
+                        _logger.LogInformation("Loading data: " + string.Join(" ", listA));
+                        _logger.LogInformation("Loading data: " + string.Join(" ", listB));
+                    }
                 }
-                //Read heading of excel worksheet
-                //string cellContent = excelWSheet.Cell("A3").GetValue<string>();
+
 
                 //Todo: Create object TimeTrackingEntry we can read the excel data into
                 //Todo: Read through each row in the excel sheet and create list of TimeTrackingEntry to send to POG
@@ -56,41 +66,44 @@ namespace Company.Function
             byte[] basicAuth = System.Text.Encoding.UTF8.GetBytes(clientId + ":" + clientSecret);
             string basicAuthEncoded = System.Convert.ToBase64String(basicAuth);
             //Create http token client and set basic auth header
-            var httpTokenClient = new HttpClient() {
+            var httpTokenClient = new HttpClient()
+            {
                 BaseAddress = new Uri(pogEndnpoint)
             };
             httpTokenClient.DefaultRequestHeaders.Add("Authorization", "Basic " + basicAuthEncoded);
             //POG API doc specifies: "Set the content type header to be 'application/x-www-form-urlencoded' and body must contain 'grant_type=client_credentials'"
-            HttpContent data = new FormUrlEncodedContent(new Dictionary<string,string>
+            HttpContent data = new FormUrlEncodedContent(new Dictionary<string, string>
             {
                 {"grant_type", "client_credentials"}
             });
 
             //Request token and parse response to get the access token
-            HttpResponseMessage tokenResponse = httpTokenClient.PostAsync(pogEndnpoint + "/OAuth/Token",data).Result;
+            HttpResponseMessage tokenResponse = httpTokenClient.PostAsync(pogEndnpoint + "/OAuth/Token", data).Result;
             string jsonString = await tokenResponse.Content.ReadAsStringAsync();
             string accessToken = (string)JObject.Parse(jsonString)["access_token"];
-            
+
 
             //Create client for get and post requests towards POG
-            var httpClient = new HttpClient() {
+            var httpClient = new HttpClient()
+            {
                 BaseAddress = new Uri(pogEndnpoint)
             };
 
+        }
+        public class MyInfo
+        {
+            public MyScheduleStatus ScheduleStatus { get; set; }
+
+            public bool IsPastDue { get; set; }
+        }
+
+        public class MyScheduleStatus
+        {
+            public DateTime Last { get; set; }
+
+            public DateTime Next { get; set; }
+
+            public DateTime LastUpdated { get; set; }
+        }
     }
-    public class MyInfo
-    {
-        public MyScheduleStatus ScheduleStatus { get; set; }
-
-        public bool IsPastDue { get; set; }
-    }
-
-    public class MyScheduleStatus
-    {
-        public DateTime Last { get; set; }
-
-        public DateTime Next { get; set; }
-
-        public DateTime LastUpdated { get; set; }
-    }
-}}
+}
