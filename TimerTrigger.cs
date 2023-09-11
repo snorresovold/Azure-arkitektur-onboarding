@@ -1,12 +1,8 @@
-using System;
-using System.IO; // Added for Stream and File classes
 using Azure.Storage.Blobs;
-using Azure.Storage.Blobs.Models;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
-using ClosedXML.Excel;
 using Newtonsoft.Json.Linq;
-
+using IronXL;
 
 namespace Company.Function
 {
@@ -27,7 +23,7 @@ namespace Company.Function
 
             string connectionString = "DefaultEndpointsProtocol=https;AccountName=storageaccountsnorre;AccountKey=qdUxk/A+8WI9S0+XTSzxlH7tE3OYFkWKFIDW0ia0NUSCQn3Us1Q/trOOfxk67l8ZRIjaeHwaNZk5+ASt2kzhhA==;EndpointSuffix=core.windows.net";
             string containerName = "containtersnorre";
-            string fileName = "exampleTransferSheet.csv";
+            string fileName = "exampleTransferSheet.xlsx";
             //Create blob client for our file
             BlobContainerClient blobContainer = new BlobContainerClient(connectionString, containerName);
             BlobClient blobClient = blobContainer.GetBlobClient(fileName);
@@ -36,30 +32,23 @@ namespace Company.Function
             {
 
                 //Download file from blob and parse to XLWorkbook
-                blobClient.DownloadTo("/tmp/test.csv"); ;
+                blobClient.DownloadTo("/tmp/test.xlsx"); ;
                 _logger.LogInformation("Downloaded blob: " + fileName + " from azure blob container.");
                 // convert stream to string
-                using (var reader = new StreamReader("/tmp/test.csv"))
-                {
-                    List<string> listA = new List<string>();
-                    List<string> listB = new List<string>();
-                    while (!reader.EndOfStream)
-                    {
-                        var line = reader.ReadLine();
-                        var values = line.Split(';');
-
-                        listA.Add(values[0]);
-                        listB.Add(values[1]);
-                        _logger.LogInformation("Loading data: " + string.Join(" ", listA));
-                        _logger.LogInformation("Loading data: " + string.Join(" ", listB));
-                    }
-                }
-
 
                 //Todo: Create object TimeTrackingEntry we can read the excel data into
                 //Todo: Read through each row in the excel sheet and create list of TimeTrackingEntry to send to POG
                 //Todo: Close connection to blob
             }
+            WorkBook wb = WorkBook.Load("/tmp/test.xlsx");//Excel file path
+            WorkSheet ws = wb.WorkSheets.First(); //by sheet name
+            List<object> List = new List<object>();
+            foreach (var cell in ws["B2:B10"])
+            {
+                _logger.LogInformation("value is: {0}", cell.Text);
+                List.Add(cell.Text);
+            }
+
             string pogEndnpoint = "https://api-demo.poweroffice.net/";
             string clientId = "3c04c56d-90b6-43a9-8c4a-d61cfb593f5c";
             string clientSecret = "67705ed4-5753-4294-a64e-ec70647427e0";
