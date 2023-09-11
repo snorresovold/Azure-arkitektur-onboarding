@@ -3,6 +3,7 @@ using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
 using IronXL;
+using static TimeTrackingEntry;
 
 namespace Company.Function
 {
@@ -43,7 +44,10 @@ namespace Company.Function
             WorkBook wb = WorkBook.Load("/tmp/test.xlsx");//Excel file path
             WorkSheet ws = wb.WorkSheets.First(); //by sheet name
             List<object> List = new List<object>();
-            foreach (var cell in ws["B2:B10"])
+            // start is 4, loop trough until you dont get any data and increase every loop
+            // [A[start]:I[start]]
+
+            foreach (var cell in ws["A4:I8"])
             {
                 _logger.LogInformation("value is: {0}", cell.Text);
                 List.Add(cell.Text);
