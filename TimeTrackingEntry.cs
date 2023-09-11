@@ -1,4 +1,14 @@
 public class TimeTrackingEntry {
+    public TimeTrackingEntry(string Consultant, string Date, string Account, string ActivityCode, string Hours, string Comment)
+    {
+        this.Consultant = Consultant;
+        this.Date = Date;
+        this.Account = Account;
+        this.ActivityCode = ActivityCode;
+        this.Hours = Hours;
+        this.Comment = Comment;
+    }
+
     public string Consultant { get; set; }
 
     public string Date { get; set; }
@@ -7,7 +17,7 @@ public class TimeTrackingEntry {
 
     public string ActivityCode { get; set; }
 
-    public int Hours { get; set; }
+    public string Hours { get; set; }
 
     public string Comment { get; set; }
 }

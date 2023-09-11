@@ -43,14 +43,25 @@ namespace Company.Function
             }
             WorkBook wb = WorkBook.Load("/tmp/test.xlsx");//Excel file path
             WorkSheet ws = wb.WorkSheets.First(); //by sheet name
-            List<object> List = new List<object>();
             // start is 4, loop trough until you dont get any data and increase every loop
             // [A[start]:I[start]]
-
-            foreach (var cell in ws["A4:I8"])
+            List<TimeTrackingEntry> fortnite = new List <TimeTrackingEntry>();
+            for (int i = 4; i < 9; i++) 
             {
-                _logger.LogInformation("value is: {0}", cell.Text);
-                List.Add(cell.Text);
+                List<string> temp = new List<string>();
+                foreach (var cell in ws[$"A{i}:I{i}"])
+                {
+                    temp.Add(cell.Text);
+                    _logger.LogInformation("value is: {0}", cell.Text);
+
+                    _logger.LogInformation($"{i}");
+                }
+                TimeTrackingEntry myObj = new TimeTrackingEntry(temp[0], temp[1], temp[2], temp[3], temp[4], temp[5]) {};
+                fortnite.Add(myObj);
+            }
+            foreach (var ting in fortnite) {
+                _logger.LogInformation("sus");  
+                _logger.LogInformation(ting.Account.ToString());
             }
 
             string pogEndnpoint = "https://api-demo.poweroffice.net/";
