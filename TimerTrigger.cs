@@ -4,6 +4,9 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
 using IronXL;
 using static TimeTrackingEntry;
+using static RequestObject;
+using System.Net.Http.Json;
+using System.Text.Json;
 
 namespace Company.Function
 {
@@ -60,8 +63,35 @@ namespace Company.Function
                 TimeTrackingEntries.Add(myObj);
             }
             foreach (var entry in TimeTrackingEntries) { // send request to POG with the entry
-                _logger.LogInformation("sus");  
                 _logger.LogInformation(entry.Account.ToString());
+            }
+            //_logger.LogInformation(TimeTrackingEntries.Count().ToString());
+            List<RequestObject> requestObjects = new List <RequestObject>();
+            foreach(var entry in TimeTrackingEntries) {
+                RequestObject timeEntry = new RequestObject
+                {
+                    Id = 0,
+                    ActivityCode = entry.ActivityCode,
+                    ProjectCode = "2",
+                    EmployeeCode = 9,
+                    CustomerCode = 10000,
+                    HourType = "Overtid 100%",
+                    Date = DateTime.Parse("2023-02-27"),
+                    IsLocked = false,
+                    Comment = entry.Comment,
+                    InternalComment = "",
+                    LastChanged = DateTime.Parse(entry.Date),
+                    ExcludedFromPayroll = false,
+                    IsTransferedToPayroll = false,
+                    IsInvoiced = false,
+                    HourlyRate = 1250.0000m,
+                    HourlyCost = 0.0000m,
+                    Minutes = 9999999,
+                    BillableHours = 7.0000m,
+                    BillableAmount = 8750.0000m,
+                    BreakTime = 0
+                };
+                requestObjects.Add(timeEntry);
             }
 
             string pogEndnpoint = "https://api-demo.poweroffice.net/";
@@ -81,17 +111,18 @@ namespace Company.Function
                 {"grant_type", "client_credentials"}
             });
 
-            //Request token and parse response to get the access token
-            HttpResponseMessage tokenResponse = httpTokenClient.PostAsync(pogEndnpoint + "/OAuth/Token", data).Result;
-            string jsonString = await tokenResponse.Content.ReadAsStringAsync();
-            string accessToken = (string)JObject.Parse(jsonString)["access_token"];
-
-
             //Create client for get and post requests towards POG
             var httpClient = new HttpClient()
             {
                 BaseAddress = new Uri(pogEndnpoint)
             };
+            foreach (var item in requestObjects)
+            {
+                HttpContent jsonContent = JsonContent.Create(item);
+                HttpResponseMessage postResponse = httpClient.PostAsync(pogEndnpoint + "/TimeTracking/TimeTrackingEntry/",jsonContent).Result;
+                string jsonResponse = await postResponse.Content.ReadAsStringAsync();
+                _logger.LogInformation(jsonResponse);
+            }
 
         }
         public class MyInfo
