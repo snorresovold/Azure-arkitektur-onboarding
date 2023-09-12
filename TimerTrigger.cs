@@ -45,7 +45,7 @@ namespace Company.Function
             WorkSheet ws = wb.WorkSheets.First(); //by sheet name
             // start is 4, loop trough until you dont get any data and increase every loop
             // [A[start]:I[start]]
-            List<TimeTrackingEntry> fortnite = new List <TimeTrackingEntry>();
+            List<TimeTrackingEntry> TimeTrackingEntries = new List <TimeTrackingEntry>();
             for (int i = 4; i < 9; i++) 
             {
                 List<string> temp = new List<string>();
@@ -57,11 +57,11 @@ namespace Company.Function
                     _logger.LogInformation($"{i}");
                 }
                 TimeTrackingEntry myObj = new TimeTrackingEntry(temp[0], temp[1], temp[2], temp[3], temp[4], temp[5]) {};
-                fortnite.Add(myObj);
+                TimeTrackingEntries.Add(myObj);
             }
-            foreach (var ting in fortnite) {
+            foreach (var entry in TimeTrackingEntries) { // send request to POG with the entry
                 _logger.LogInformation("sus");  
-                _logger.LogInformation(ting.Account.ToString());
+                _logger.LogInformation(entry.Account.ToString());
             }
 
             string pogEndnpoint = "https://api-demo.poweroffice.net/";
