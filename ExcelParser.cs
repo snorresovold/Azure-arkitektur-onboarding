@@ -67,7 +67,7 @@ public class ExcelParser
     //     return TimeTrackingEntries;
     // }
 
-    public List<string> ParseExcel(string connectionString, string containerName, string fileName)
+    public string ParseExcel(string connectionString, string containerName, string fileName)
     {
         {
         string blobPath = "/tmp/test.xlsx"; // Define where to download the blob file locally
@@ -88,8 +88,8 @@ public class ExcelParser
         IXLWorksheet ws = wb.Worksheet(1);
         IXLRow row = ws.Row(4);
         List<string> rowData = new List<string>();
+        List<TimeTrackingEntry> timeTrackingEntries = new List<TimeTrackingEntry>(); 
         int columnNumber = 1;
-
         while (true)
         {
             var cell = row.Cell(columnNumber);
@@ -103,8 +103,10 @@ public class ExcelParser
             rowData.Add(value);
             columnNumber++;
             _logger.LogInformation(value, columnNumber);
+
         }
-       return rowData;
+        string fortnite = "sus";
+       return fortnite;
     }
 }
 
