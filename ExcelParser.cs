@@ -2,6 +2,7 @@ using Azure.Storage.Blobs;
 using Microsoft.Extensions.Logging;
 using ClosedXML.Excel;
 using DocumentFormat.OpenXml.Drawing.Charts;
+using DocumentFormat.OpenXml.Spreadsheet;
 
 public class ExcelParser
 {
@@ -67,7 +68,7 @@ public class ExcelParser
     //     return TimeTrackingEntries;
     // }
 
-    public string ParseExcel(string connectionString, string containerName, string fileName)
+    public List<TimeTrackingEntry> ParseExcel(string connectionString, string containerName, string fileName)
     {
         {
         string blobPath = "/tmp/test.xlsx"; // Define where to download the blob file locally
@@ -86,30 +87,80 @@ public class ExcelParser
 
         // Get the first worksheet
         IXLWorksheet ws = wb.Worksheet(1);
-        IXLRow row = ws.Row(4);
-        List<string> rowData = new List<string>();
-        List<TimeTrackingEntry> timeTrackingEntries = new List<TimeTrackingEntry>(); 
-        int columnNumber = 1;
-        while (true)
-        {
-            var cell = row.Cell(columnNumber);
-            string value = cell.GetValue<string>();
+        List<TimeTrackingEntry> TimeTrackingEntries = new List<TimeTrackingEntry>();
 
-            if (string.IsNullOrWhiteSpace(value))
+        int numRows = ws.LastRowUsed().RowNumber();
+        int currentRow = 0;
+        List<List<string>> result = new List<List<string>>();
+        while (currentRow < numRows)
+        {
+            List<string> currentRowData = new List<string>();
+            string letters = ws.LastColumnUsed().ColumnLetter();
+            int numCols = ExcelColumnNameToNumber(letters);
+            int currentCol = 0;
+
+            while (currentCol < numCols)
             {
-                break;
+                string value = ws.Cell(currentRow, currentCol).GetValue<string>();
+                _logger.LogInformation("fortnite" + value);
+                if (!string.IsNullOrWhiteSpace(value))
+                {
+                    currentRowData.Add(value);
+                }
+                foreach(var x in currentRowData) {
+                    _logger.LogInformation(x);
+                }
+                currentCol++;
             }
 
-            rowData.Add(value);
-            columnNumber++;
-            _logger.LogInformation(value, columnNumber);
+            if (currentRowData.Count > 0)
+            {
+                result.Add(currentRowData);
+            }
 
+            currentRow++;
         }
-        string fortnite = "sus";
-       return fortnite;
+        return TimeTrackingEntries;
+        // int columnNumber = 1;
+        // int rowNumber = 1;
+        // for (int i = 0; i < 5; i++) 
+        // {
+        //     List<string> rowData = new List<string>();
+        //     while (true)
+        //     {
+        //         var cell = row.Cell(columnNumber);
+        //         string value = cell.GetValue<string>();
+
+        //         if (string.IsNullOrWhiteSpace(value))
+        //         {
+        //             break;
+        //         }
+
+        //         rowData.Add(value);
+        //         _logger.LogInformation(value, columnNumber);
+        //     }
+        //     TimeTrackingEntry entry = new TimeTrackingEntry(rowData[0], rowData[1], rowData[2], rowData[3], rowData[4], rowData[5]) {};
+        //     // _logger.LogInformation(rowData[0], rowData[1], rowData[2], rowData[3], rowData[4], rowData[5]);
+        //     TimeTrackingEntries.Add(entry);
+        // }
     }
 }
+    public static int ExcelColumnNameToNumber(string columnName)
+    {
+        if (string.IsNullOrEmpty(columnName)) throw new ArgumentNullException("columnName");
 
+        columnName = columnName.ToUpperInvariant();
+
+        int sum = 0;
+
+        for (int i = 0; i < columnName.Length; i++)
+        {
+            sum *= 26;
+            sum += (columnName[i] - 'A' + 1);
+        }
+
+        return sum;
+    }
     public static List<RequestObject> CreateRequestObjects(List<TimeTrackingEntry> TimeTrackingEntries)
     {
         List<RequestObject> requestObjects = new List<RequestObject>();

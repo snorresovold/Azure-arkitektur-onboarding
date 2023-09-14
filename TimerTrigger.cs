@@ -27,7 +27,7 @@ namespace Company.Function
             string containerName = "containtersnorre";
             string fileName = "exampleTransferSheet.xlsx";
 
-            string TimeTrackingEntries = _excelParser.ParseExcel(connectionString, containerName, fileName);
+            List<TimeTrackingEntry> TimeTrackingEntries = _excelParser.ParseExcel(connectionString, containerName, fileName);
 
             // List<RequestObject> requestObjects = _excelParser.CreateRequestObjects(TimeTrackingEntries);
 
