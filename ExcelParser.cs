@@ -13,61 +13,6 @@ public class ExcelParser
         _logger = logger;
     }
 
-    // public List<TimeTrackingEntry> ParseExcel(string connectionString, string containerName, string fileName)
-    // // {
-    //     string blobPath = "/tmp/test.xlsx"; // Define where to download the blob file locally
-
-    //     BlobContainerClient blobContainer = new BlobContainerClient(connectionString, containerName);
-    //     BlobClient blobClient = blobContainer.GetBlobClient(fileName);
-
-    //     if (blobClient.Exists())
-    //     {
-    //         blobClient.DownloadTo(blobPath);
-    //         _logger.LogInformation("Downloaded blob: " + fileName + " from azure blob container.");
-    //     }
-
-    //     // Load the workbook from the blobPath
-    //     XLWorkbook wb = new XLWorkbook(blobPath);
-
-    //     // Get the first worksheet
-    //     IXLWorksheet ws = wb.Worksheet(1);
-
-    //     List<TimeTrackingEntry> TimeTrackingEntries = new List<TimeTrackingEntry>();
-    //     int startColumn = 4;
-    //     int endColumn = 9;
-
-    //     for (int i = startColumn; i <= endColumn; i++) // Iterate through columns
-    //     {
-    //         for (int j = 4; ; j++) // Infinite loop to read rows until there is no data
-    //         {
-    //             List<string> temp = new List<string>();
-    //             bool hasData = true; // Initialize to true
-
-    //             IXLCell cell = ws.Cell(j, i);
-
-    //             // List<string> temp = new List<string>();
-    //             // bool hasData = true;
-
-    //             temp.Add(cell.Value.ToString());
-    //             _logger.LogInformation("value is: {i}", cell.Value);
-
-    //             if (string.IsNullOrWhiteSpace(cell.Value.ToString()))
-    //             {
-    //                 hasData = false;
-    //             }
-
-    //             if (!hasData)
-    //             {
-    //                 break; // Exit loop if no data is found in the row
-    //             }
-
-    //             TimeTrackingEntry myObj = new TimeTrackingEntry(temp[0], temp[1], temp[2], temp[3], temp[4], temp[5]) {};
-    //             TimeTrackingEntries.Add(myObj);
-    //         }
-    //     }
-    //     return TimeTrackingEntries;
-    // }
-
     public List<TimeTrackingEntry> ParseExcel(string connectionString, string containerName, string fileName)
     {
         {
@@ -90,26 +35,25 @@ public class ExcelParser
         List<TimeTrackingEntry> TimeTrackingEntries = new List<TimeTrackingEntry>();
 
         int numRows = ws.LastRowUsed().RowNumber();
-        int currentRow = 0;
+        int currentRow = 2;
         List<List<string>> result = new List<List<string>>();
-        while (currentRow < numRows)
+
+        while (currentRow <= numRows) // Changed the condition to include the last row
         {
             List<string> currentRowData = new List<string>();
             string letters = ws.LastColumnUsed().ColumnLetter();
             int numCols = ExcelColumnNameToNumber(letters);
-            int currentCol = 0;
+            int currentCol = 1;
 
-            while (currentCol < numCols)
+            while (currentCol <= numCols) // Changed the condition to include the last column
             {
-                string value = ws.Cell(currentRow, currentCol).GetValue<string>();
-                _logger.LogInformation("fortnite" + value);
+                string value = ws.Cell(currentRow, currentCol).GetString();
                 if (!string.IsNullOrWhiteSpace(value))
                 {
-                    currentRowData.Add(value);
+                    if (!currentRowData.Contains(value))
+                        currentRowData.Add(value);
                 }
-                foreach(var x in currentRowData) {
-                    _logger.LogInformation(x);
-                }
+
                 currentCol++;
             }
 
@@ -120,29 +64,20 @@ public class ExcelParser
 
             currentRow++;
         }
-        return TimeTrackingEntries;
-        // int columnNumber = 1;
-        // int rowNumber = 1;
-        // for (int i = 0; i < 5; i++) 
-        // {
-        //     List<string> rowData = new List<string>();
-        //     while (true)
-        //     {
-        //         var cell = row.Cell(columnNumber);
-        //         string value = cell.GetValue<string>();
-
-        //         if (string.IsNullOrWhiteSpace(value))
-        //         {
-        //             break;
-        //         }
-
-        //         rowData.Add(value);
-        //         _logger.LogInformation(value, columnNumber);
-        //     }
-        //     TimeTrackingEntry entry = new TimeTrackingEntry(rowData[0], rowData[1], rowData[2], rowData[3], rowData[4], rowData[5]) {};
-        //     // _logger.LogInformation(rowData[0], rowData[1], rowData[2], rowData[3], rowData[4], rowData[5]);
-        //     TimeTrackingEntries.Add(entry);
-        // }
+        // Moved logging outside of the loop
+        result.RemoveAt(0);
+        result.RemoveAt(result.Count - 1);// removes unneccesary data from the matrix
+        foreach (var row in result)
+        {
+            foreach (var value in row)
+            {            
+                _logger.LogInformation(value);
+                
+            }
+            TimeTrackingEntry temp = new TimeTrackingEntry(row[0], row[1], row[2], row[3], row[4], row[5]) {};
+            TimeTrackingEntries.Add(temp);
+        }
+        return TimeTrackingEntries; // Returning result instead of TimeTrackingEntries
     }
 }
     public static int ExcelColumnNameToNumber(string columnName)
