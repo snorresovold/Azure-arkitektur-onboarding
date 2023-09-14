@@ -32,8 +32,8 @@ namespace Company.Function
             List<RequestObject> requestObjects = _excelParser.CreateRequestObjects(TimeTrackingEntries);
 
             string pogEndnpoint = "https://api-demo.poweroffice.net/";
-            string clientId = "3c04c56d-90b6-43a9-8c4a-d61cfb593f5c";
-            string clientSecret = "67705ed4-5753-4294-a64e-ec70647427e0";
+            string clientId = "";
+            string clientSecret = "";
 
             string accessToken = await _pogApiClient.GetAccessTokenAsync(pogEndnpoint,
                                                                          clientId,
