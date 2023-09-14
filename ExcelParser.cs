@@ -16,70 +16,83 @@ public class ExcelParser
     public List<TimeTrackingEntry> ParseExcel(string connectionString, string containerName, string fileName)
     {
         {
-        string blobPath = "/tmp/test.xlsx"; // Define where to download the blob file locally
+            string blobPath = "/tmp/test.xlsx"; // Define where to download the blob file locally
 
-        BlobContainerClient blobContainer = new BlobContainerClient(connectionString, containerName);
-        BlobClient blobClient = blobContainer.GetBlobClient(fileName);
+            BlobContainerClient blobContainer = new BlobContainerClient(connectionString, containerName);
+            BlobClient blobClient = blobContainer.GetBlobClient(fileName);
 
-        if (blobClient.Exists())
-        {
-            blobClient.DownloadTo(blobPath);
-            _logger.LogInformation("Downloaded blob: " + fileName + " from azure blob container.");
-        }
-
-        // Load the workbook from the blobPath
-        XLWorkbook wb = new XLWorkbook(blobPath);
-
-        // Get the first worksheet
-        IXLWorksheet ws = wb.Worksheet(1);
-        List<TimeTrackingEntry> TimeTrackingEntries = new List<TimeTrackingEntry>();
-
-        int numRows = ws.LastRowUsed().RowNumber();
-        int currentRow = 2;
-        List<List<string>> result = new List<List<string>>();
-
-        while (currentRow <= numRows) // Changed the condition to include the last row
-        {
-            List<string> currentRowData = new List<string>();
-            string letters = ws.LastColumnUsed().ColumnLetter();
-            int numCols = ExcelColumnNameToNumber(letters);
-            int currentCol = 1;
-
-            while (currentCol <= numCols) // Changed the condition to include the last column
+            if (blobClient.Exists())
             {
-                string value = ws.Cell(currentRow, currentCol).GetString();
-                if (!string.IsNullOrWhiteSpace(value))
+                blobClient.DownloadTo(blobPath);
+                _logger.LogInformation("Downloaded blob: " + fileName + " from azure blob container.");
+            }
+
+            // Load the workbook from the blobPath
+            XLWorkbook wb = new XLWorkbook(blobPath);
+
+            // Get the first worksheet
+            IXLWorksheet ws = wb.Worksheet(1);
+            List<TimeTrackingEntry> TimeTrackingEntries = new List<TimeTrackingEntry>();
+
+            int numRows = ws.LastRowUsed().RowNumber();
+            int currentRow = 2;
+            List<List<string>> result = new List<List<string>>();
+
+            while (currentRow <= numRows) // Changed the condition to include the last row
+            {
+                List<string> currentRowData = new List<string>();
+                string letters = ws.LastColumnUsed().ColumnLetter();
+                int numCols = ExcelColumnNameToNumber(letters);
+                int currentCol = 1;
+
+                while (currentCol <= numCols) // Changed the condition to include the last column
                 {
-                    if (!currentRowData.Contains(value))
-                        currentRowData.Add(value);
+                    string value = ws.Cell(currentRow, currentCol).GetString();
+                    if (!string.IsNullOrWhiteSpace(value))
+                    {
+                        if (!currentRowData.Contains(value))
+                            currentRowData.Add(value);
+                    }
+
+                    currentCol++;
                 }
 
-                currentCol++;
-            }
+                if (currentRowData.Count > 0)
+                {
+                    result.Add(currentRowData);
+                }
 
-            if (currentRowData.Count > 0)
+                currentRow++;
+            }
+            // Moved logging outside of the loop
+            try
             {
-                result.Add(currentRowData);
+                result.RemoveAt(0);
+                result.RemoveAt(result.Count - 1);
+                foreach (var row in result)
+                {
+                    foreach (var value in row)
+                    {
+                        _logger.LogInformation(value);
+                    }
+                    TimeTrackingEntry temp = new TimeTrackingEntry(row[0], row[1], row[2], row[3], row[4], row[5]) { };
+                    TimeTrackingEntries.Add(temp);
+                }
             }
-
-            currentRow++;
-        }
-        // Moved logging outside of the loop
-        result.RemoveAt(0);
-        result.RemoveAt(result.Count - 1);// removes unneccesary data from the matrix
-        foreach (var row in result)
-        {
-            foreach (var value in row)
-            {            
-                _logger.LogInformation(value);
-                
+            catch (Exception ex)
+            {
+                _logger.LogError("An exception occurred: " + ex.Message + "Idk koffor detta funke men d gjer");
+                foreach (var row in result)
+                {
+                    foreach (var value in row)
+                    {
+                        _logger.LogInformation(value);
+                    }
+                }
             }
-            TimeTrackingEntry temp = new TimeTrackingEntry(row[0], row[1], row[2], row[3], row[4], row[5]) {};
-            TimeTrackingEntries.Add(temp);
+            return TimeTrackingEntries; // Returning result instead of TimeTrackingEntries
         }
-        return TimeTrackingEntries; // Returning result instead of TimeTrackingEntries
     }
-}
     public static int ExcelColumnNameToNumber(string columnName)
     {
         if (string.IsNullOrEmpty(columnName)) throw new ArgumentNullException("columnName");
@@ -96,7 +109,7 @@ public class ExcelParser
 
         return sum;
     }
-    public static List<RequestObject> CreateRequestObjects(List<TimeTrackingEntry> TimeTrackingEntries)
+    public List<RequestObject> CreateRequestObjects(List<TimeTrackingEntry> TimeTrackingEntries)
     {
         List<RequestObject> requestObjects = new List<RequestObject>();
 

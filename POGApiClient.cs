@@ -79,7 +79,7 @@ public class POGApiClient
             foreach (var item in requestObjects)
             {
                 HttpContent jsonContent = JsonContent.Create(item);
-                HttpResponseMessage postResponse = await _httpClient.PostAsync("/TimeTracking/TimeTrackingEntry/", jsonContent);
+                HttpResponseMessage postResponse = await _httpClient.PostAsync("https://api-demo.poweroffice.net/TimeTracking/TimeTrackingEntry", jsonContent);
                 postResponse.EnsureSuccessStatusCode();
             }
         }

@@ -1,4 +1,5 @@
-public class TimeTrackingEntry {
+public class TimeTrackingEntry
+{
     public TimeTrackingEntry(string Consultant, string Date, string Account, string ActivityCode, string Hours, string Comment)
     {
         this.Consultant = Consultant;

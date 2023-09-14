@@ -29,7 +29,7 @@ namespace Company.Function
 
             List<TimeTrackingEntry> TimeTrackingEntries = _excelParser.ParseExcel(connectionString, containerName, fileName);
 
-            // List<RequestObject> requestObjects = _excelParser.CreateRequestObjects(TimeTrackingEntries);
+            List<RequestObject> requestObjects = _excelParser.CreateRequestObjects(TimeTrackingEntries);
 
             string pogEndnpoint = "https://api-demo.poweroffice.net/";
             string clientId = "3c04c56d-90b6-43a9-8c4a-d61cfb593f5c";
@@ -39,7 +39,7 @@ namespace Company.Function
                                                                          clientId,
                                                                          clientSecret);
 
-        //    await _pogApiClient.PostTimeTrackingEntriesAsync(requestObjects, accessToken);
+            await _pogApiClient.PostTimeTrackingEntriesAsync(requestObjects, accessToken);
         }
 
         public class MyInfo
