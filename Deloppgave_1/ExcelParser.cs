@@ -79,17 +79,7 @@ public class ExcelParser
                     TimeTrackingEntries.Add(temp);
                 }
             }
-            catch (Exception ex)
-            {
-                _logger.LogError("An exception occurred: " + ex.Message + "Idk koffor detta funke men d gjer");
-                foreach (var row in result)
-                {
-                    foreach (var value in row)
-                    {
-                        _logger.LogInformation(value);
-                    }
-                }
-            }
+            catch (Exception ex){}
             return TimeTrackingEntries; // Returning result instead of TimeTrackingEntries
         }
     }
@@ -127,7 +117,7 @@ public class ExcelParser
                 IsLocked = false,
                 Comment = entry.Comment,
                 InternalComment = "",
-                LastChanged = DateTime.Parse(entry.Date),
+                LastChanged = DateTime.Parse("2023-02-27"),
                 ExcludedFromPayroll = false,
                 IsTransferedToPayroll = false,
                 IsInvoiced = false,
