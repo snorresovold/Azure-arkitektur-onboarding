@@ -23,17 +23,18 @@ namespace Company.Function
 
             _logger.LogInformation($"C# Timer trigger function executed at: {DateTime.Now}");
 
-            string connectionString = "DefaultEndpointsProtocol=https;AccountName=storageaccountsnorre;AccountKey=qdUxk/A+8WI9S0+XTSzxlH7tE3OYFkWKFIDW0ia0NUSCQn3Us1Q/trOOfxk67l8ZRIjaeHwaNZk5+ASt2kzhhA==;EndpointSuffix=core.windows.net";
-            string containerName = "containtersnorre";
-            string fileName = "exampleTransferSheet.xlsx";
+            string connectionString = Environment.GetEnvironmentVariable("connectionString");
+            string containerName = Environment.GetEnvironmentVariable("containerName");
+            string fileName = Environment.GetEnvironmentVariable("fileName");
 
             List<TimeTrackingEntry> TimeTrackingEntries = _excelParser.ParseExcel(connectionString, containerName, fileName);
 
             List<RequestObject> requestObjects = _excelParser.CreateRequestObjects(TimeTrackingEntries);
 
-            string pogEndnpoint = "https://api-demo.poweroffice.net/";
-            string clientId = "3c04c56d-90b6-43a9-8c4a-d61cfb593f5c";
-            string clientSecret = "67705ed4-5753-4294-a64e-ec70647427e0";
+            string pogEndnpoint = Environment.GetEnvironmentVariable("pogEndpoint");
+            string clientId = Environment.GetEnvironmentVariable("clientId");
+            string clientSecret = Environment.GetEnvironmentVariable("clientSecret");
+
 
             string accessToken = await _pogApiClient.GetAccessTokenAsync(pogEndnpoint,
                                                                          clientId,

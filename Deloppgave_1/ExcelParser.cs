@@ -38,14 +38,14 @@ public class ExcelParser
             int currentRow = 2;
             List<List<string>> result = new List<List<string>>();
 
-            while (currentRow <= numRows) // Changed the condition to include the last row
+            while (currentRow < numRows) // Changed the condition to include the last row
             {
                 List<string> currentRowData = new List<string>();
                 string letters = ws.LastColumnUsed().ColumnLetter();
                 int numCols = ExcelColumnNameToNumber(letters);
                 int currentCol = 1;
 
-                while (currentCol <= numCols) // Changed the condition to include the last column
+                while (currentCol < numCols) // Changed the condition to include the last column
                 {
                     string value = ws.Cell(currentRow, currentCol).GetString();
                     if (!string.IsNullOrWhiteSpace(value))
@@ -67,15 +67,15 @@ public class ExcelParser
             // Moved logging outside of the loop
             try
             {
-                result.RemoveAt(0);
-                result.RemoveAt(result.Count - 1);
+            //     // result.RemoveAt(0);
+            //     // result.RemoveAt(result.Count - 1);
                 foreach (var row in result)
                 {
                     foreach (var value in row)
                     {
                         _logger.LogInformation(value);
                     }
-                    TimeTrackingEntry temp = new TimeTrackingEntry(row[0], row[1], row[2], row[3], row[4], row[5]) { };
+                    TimeTrackingEntry temp = new TimeTrackingEntry(row[0], row[1], row[2], row[3], row[4], row[5]) {};
                     TimeTrackingEntries.Add(temp);
                 }
             }

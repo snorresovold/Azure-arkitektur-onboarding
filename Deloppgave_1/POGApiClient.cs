@@ -55,7 +55,6 @@ public class POGApiClient
 
             string jsonString = await tokenResponse.Content.ReadAsStringAsync();
             string accessToken = (string)JObject.Parse(jsonString)["access_token"];
-            _logger.LogInformation(accessToken);
             return accessToken;
         }
         catch (Exception ex)
