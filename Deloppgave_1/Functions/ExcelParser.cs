@@ -65,21 +65,18 @@ public class ExcelParser
                 currentRow++;
             }
             // Moved logging outside of the loop
-            try
+            result.RemoveAt(0);
+            result.RemoveAt(result.Count - 1);
+            foreach (var row in result)
             {
-                result.RemoveAt(0);
-                result.RemoveAt(result.Count - 1);
-                foreach (var row in result)
+                foreach (var value in row)
                 {
-                    foreach (var value in row)
-                    {
-                        _logger.LogInformation(value);
-                    }
-                    TimeTrackingEntry temp = new TimeTrackingEntry(row[0], row[1], row[2], row[3], row[4], row[5]) { };
-                    TimeTrackingEntries.Add(temp);
+                    _logger.LogInformation(value);
                 }
+                TimeTrackingEntry temp = new TimeTrackingEntry(row[0], row[1], row[2], row[3], row[4], row[5]) { };
+                TimeTrackingEntries.Add(temp);
+
             }
-            catch (Exception ex) { }
             return TimeTrackingEntries; // Returning result instead of TimeTrackingEntries
         }
     }
