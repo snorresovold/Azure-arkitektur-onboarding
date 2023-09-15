@@ -67,21 +67,55 @@ public class ExcelParser
             // Moved logging outside of the loop
             try
             {
-            //     // result.RemoveAt(0);
-            //     // result.RemoveAt(result.Count - 1);
+                result.RemoveAt(0);
+                result.RemoveAt(result.Count - 1);
                 foreach (var row in result)
                 {
                     foreach (var value in row)
                     {
                         _logger.LogInformation(value);
                     }
-                    TimeTrackingEntry temp = new TimeTrackingEntry(row[0], row[1], row[2], row[3], row[4], row[5]) {};
+                    TimeTrackingEntry temp = new TimeTrackingEntry(row[0], row[1], row[2], row[3], row[4], row[5]) { };
                     TimeTrackingEntries.Add(temp);
                 }
             }
-            catch (Exception ex){}
+            catch (Exception ex) { }
             return TimeTrackingEntries; // Returning result instead of TimeTrackingEntries
         }
+    }
+    public List<RequestObject> CreateRequestObjects(List<TimeTrackingEntry> TimeTrackingEntries)
+    {
+        List<RequestObject> requestObjects = new List<RequestObject>();
+
+        foreach (var entry in TimeTrackingEntries)
+        {
+            RequestObject timeEntry = new RequestObject
+            {
+                Id = 0,
+                ActivityCode = "100",
+                ProjectCode = "2",
+                EmployeeCode = 9,
+                CustomerCode = 10000,
+                HourType = "Overtid 100%",
+                Date = DateTime.Parse(ConvertDateFormat(entry.Date)),
+                IsLocked = false,
+                Comment = entry.Comment,
+                InternalComment = "",
+                LastChanged = DateTime.Parse(ConvertDateFormat(entry.Date)),
+                ExcludedFromPayroll = false,
+                IsTransferedToPayroll = false,
+                IsInvoiced = false,
+                HourlyRate = 1250.0000m,
+                HourlyCost = 0.0000m,
+                Minutes = 9999999,
+                BillableHours = 7.0000m,
+                BillableAmount = 8750.0000m,
+                BreakTime = 0
+            };
+            requestObjects.Add(timeEntry);
+        }
+
+        return requestObjects;
     }
     public static int ExcelColumnNameToNumber(string columnName)
     {
@@ -99,38 +133,15 @@ public class ExcelParser
 
         return sum;
     }
-    public List<RequestObject> CreateRequestObjects(List<TimeTrackingEntry> TimeTrackingEntries)
+    static string ConvertDateFormat(string inputDate)
     {
-        List<RequestObject> requestObjects = new List<RequestObject>();
+        // Parse the input date string
+        DateTime originalDate = DateTime.ParseExact(inputDate, "M/d/yyyy h:mm:ss tt", null);
 
-        foreach (var entry in TimeTrackingEntries)
-        {
-            RequestObject timeEntry = new RequestObject
-            {
-                Id = 0,
-                ActivityCode = "100",
-                ProjectCode = "2",
-                EmployeeCode = 9,
-                CustomerCode = 10000,
-                HourType = "Overtid 100%",
-                Date = DateTime.Parse("2023-02-27"),
-                IsLocked = false,
-                Comment = entry.Comment,
-                InternalComment = "",
-                LastChanged = DateTime.Parse("2023-02-27"),
-                ExcludedFromPayroll = false,
-                IsTransferedToPayroll = false,
-                IsInvoiced = false,
-                HourlyRate = 1250.0000m,
-                HourlyCost = 0.0000m,
-                Minutes = 9999999,
-                BillableHours = 7.0000m,
-                BillableAmount = 8750.0000m,
-                BreakTime = 0
-            };
-            requestObjects.Add(timeEntry);
-        }
+        // Convert it to the desired format
+        string convertedDate = originalDate.ToString("yyyy-MM-dd");
 
-        return requestObjects;
+        return convertedDate;
     }
+
 }
