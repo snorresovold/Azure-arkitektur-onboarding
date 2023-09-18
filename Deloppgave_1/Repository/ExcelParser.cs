@@ -111,7 +111,7 @@ public class ExcelParser
             };
             requestObjects.Add(timeEntry);
         }
-
+        
         return requestObjects;
     }
     public static int ExcelColumnNameToNumber(string columnName)
