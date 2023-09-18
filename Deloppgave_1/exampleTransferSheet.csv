@@ -1,15 +1,8 @@
-Example timesheet for transfer to PowerOffice Go ,,,,,,,,
-,,,,,,,,
+Example timesheet for transfer to PowerOffice Go ,
 Consultant,Date,Account,Activity Code,Hours,Comment,,Activites ,Activity code
-Sindre Langeveld,27-Jan,23 - Sval Energi,ZC001,8,,,Bistand,ZC001
-Sindre Langeveld,28-Jan,23 - Sval Energi,ZC001,8,,,Bistand - Overtid 50%,ZC002
-Sindre Langeveld,29-Jan,23 - Sval Energi,ZC003,5,Helgejobbing grunnet leveranse,,Bistand - Overtid 100%,ZC003
-Sindre Langeveld,1-Feb,Stavanger internal,ZC004,8,,,Ikke fakturerbar tid,ZC004
-Sindre Langeveld,5-Feb,Stavanger internal,ZC004,8,,,,
-,,,,,,,,
-,,,,,,,,
-,,,,,,,,
-,,,,,,,,
-,,,,,,,,
-,,,,,,,,
-Total,,,,37,,,,
+Sindre Langeveld,27-Jan,23 - Sval Energi,ZC001,8,Bistand,ZC001
+Sindre Langeveld,28-Jan,23 - Sval Energi,ZC001,8,Bistand - Overtid 50%,ZC002
+Sindre Langeveld,29-Jan,23 - Sval Energi,ZC003,5,Helgejobbing grunnet leveranse,Bistand - Overtid 100%,ZC003
+Sindre Langeveld,1-Feb,Stavanger internal,ZC004,8,Ikke fakturerbar tid,ZC004
+Sindre Langeveld,5-Feb,Stavanger internal,ZC004,8,
+Total,37,
