@@ -21,21 +21,12 @@ namespace Zebra.Function
                 accountEndpoint: Environment.GetEnvironmentVariable("CosmosDbConnectionString")!,
                 authKeyOrResourceToken: Environment.GetEnvironmentVariable("CosmosKey")!
             );
-            Container container = client.GetContainer("Testainer", "testainer");
-
-            TimeTrackingEntry entry = new TimeTrackingEntry() {
-                id = "6",
-                Consultant = "John Doe",
-                Date = "2023-09-18",
-                Account = "Client ABC",
-                ActivityCode = "DEV",
-                Hours = new Random().Next(1, 10), // Generates a random integer between 1 and 10
-                Comment = "Worked on feature implementation"
-            };
-                TimeTrackingEntry createdItem = await container.CreateItemAsync(
-                item: entry,
-                partitionKey: new PartitionKey("id")
+            // New instance of Database response class referencing the server-side database
+            DatabaseResponse response = await client.CreateDatabaseIfNotExistsAsync(
+                id: "TimeTrackingEntries"
             );
+            // Parse additional response properties
+            Database database3 = response.Database;
 
             _logger.LogInformation($"C# Timer trigger function executed at: {DateTime.Now}");
         }
