@@ -1,35 +1,28 @@
-using System;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 using Microsoft.Azure.Cosmos;
+
 namespace Zebra.Function
 {
     public class TimerTrigger
     {
         private readonly ILogger _logger;
+        private CosmosHandler _cosmosHandler;
         public TimerTrigger(ILoggerFactory loggerFactory)
         {
             _logger = loggerFactory.CreateLogger<TimerTrigger>();
+            _cosmosHandler = new CosmosHandler(_logger);
         }
         [Function("TimerTrigger")]
         public async Task RunAsync([TimerTrigger("*/10 * * * * *")] MyInfo myTimer)
         {
-
-            // TODO get this into the cosmoshandler
-            Product item = new(
-                id: "1",
-                category: "gear-surf-surfboards",
-                name: "Sunnox Surfboard",
-                quantity: 8,
-                sale: true
-            );
-
-
-
             _logger.LogInformation($"C# Timer trigger function executed at: {DateTime.Now}");
+            (Container container, Database database) = await _cosmosHandler.Init();
+            dynamic placeholder = _cosmosHandler.GenerateRandomProduct();
+            _cosmosHandler.CreateTimeTrackingEntry(placeholder, container);
         }
     }
-    public class MyInfoa
+    public class MyInfo
     {
         public MyScheduleStatus ScheduleStatus { get; set; }
 
