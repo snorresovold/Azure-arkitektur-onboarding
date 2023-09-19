@@ -7,32 +7,29 @@ namespace Zebra.Function
     public class TimerTrigger
     {
         private readonly ILogger _logger;
-
         public TimerTrigger(ILoggerFactory loggerFactory)
         {
             _logger = loggerFactory.CreateLogger<TimerTrigger>();
         }
-
         [Function("TimerTrigger")]
         public async Task RunAsync([TimerTrigger("*/10 * * * * *")] MyInfo myTimer)
         {
-            
-            using CosmosClient client = new(
-                accountEndpoint: Environment.GetEnvironmentVariable("CosmosDbConnectionString")!,
-                authKeyOrResourceToken: Environment.GetEnvironmentVariable("CosmosKey")!
+
+            // TODO get this into the cosmoshandler
+            Product item = new(
+                id: "1",
+                category: "gear-surf-surfboards",
+                name: "Sunnox Surfboard",
+                quantity: 8,
+                sale: true
             );
-            // New instance of Database response class referencing the server-side database
-            DatabaseResponse response = await client.CreateDatabaseIfNotExistsAsync(
-                id: "TimeTrackingEntries"
-            );
-            // Parse additional response properties
-            Database database3 = response.Database;
+
+
 
             _logger.LogInformation($"C# Timer trigger function executed at: {DateTime.Now}");
         }
     }
-
-    public class MyInfo
+    public class MyInfoa
     {
         public MyScheduleStatus ScheduleStatus { get; set; }
 
