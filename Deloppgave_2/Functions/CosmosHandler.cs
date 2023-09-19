@@ -3,12 +3,14 @@ using Microsoft.Extensions.Logging;
 public class CosmosHandler
 {
     private readonly ILogger _logger;
+    public ILogger Logger { get; }
+
 
     public CosmosHandler(ILogger logger)
     {
         _logger = logger;
     }
-    public static async Task<(Container, Database)> Init()
+    public async Task<(Container, Database)> Init()
     {
         using CosmosClient client = new(
                 accountEndpoint: Environment.GetEnvironmentVariable("CosmosDbConnectionString")!,
@@ -30,7 +32,7 @@ public class CosmosHandler
         return (container, database);
     }
     // fix this after lunsh :smile:
-    public static async Task<Product> CreateTimeTrackingEntry(Product item, Container container)
+    public async Task<Product> CreateTimeTrackingEntry(Product item, Container container)
     {
         Product createdItem = await container.CreateItemAsync(
             item: item,
@@ -40,7 +42,7 @@ public class CosmosHandler
         return createdItem;
     }
 
-    public static Product GenerateRandomProduct()
+    public Product GenerateRandomProduct()
     {
         Random random = new Random();
         string id = random.Next(1, 1000).ToString(); // Generating a random number between 1 and 1000 for id
