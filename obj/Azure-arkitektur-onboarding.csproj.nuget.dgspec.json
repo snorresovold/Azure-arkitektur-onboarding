@@ -1,0 +1,91 @@
+{
+  "format": 1,
+  "restore": {
+    "/Users/snorrresovold/Documents/Fullstack/Azure-arkitektur-onboarding/Azure-arkitektur-onboarding.csproj": {}
+  },
+  "projects": {
+    "/Users/snorrresovold/Documents/Fullstack/Azure-arkitektur-onboarding/Azure-arkitektur-onboarding.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/snorrresovold/Documents/Fullstack/Azure-arkitektur-onboarding/Azure-arkitektur-onboarding.csproj",
+        "projectName": "Azure-arkitektur-onboarding",
+        "projectPath": "/Users/snorrresovold/Documents/Fullstack/Azure-arkitektur-onboarding/Azure-arkitektur-onboarding.csproj",
+        "packagesPath": "/Users/snorrresovold/.nuget/packages/",
+        "outputPath": "/Users/snorrresovold/Documents/Fullstack/Azure-arkitektur-onboarding/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/snorrresovold/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net7.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net7.0": {
+            "targetAlias": "net7.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net7.0": {
+          "targetAlias": "net7.0",
+          "dependencies": {
+            "ClosedXML": {
+              "target": "Package",
+              "version": "[0.102.1, )"
+            },
+            "CsvHelper": {
+              "target": "Package",
+              "version": "[30.0.1, )"
+            },
+            "Microsoft.Azure.Functions.Worker": {
+              "target": "Package",
+              "version": "[1.19.0, )"
+            },
+            "Microsoft.Azure.Functions.Worker.Extensions.Timer": {
+              "target": "Package",
+              "version": "[4.0.1, )"
+            },
+            "Microsoft.Azure.Functions.Worker.Sdk": {
+              "target": "Package",
+              "version": "[1.14.0, )"
+            },
+            "Microsoft.Azure.WebJobs.Extensions.Storage.Blobs": {
+              "target": "Package",
+              "version": "[5.0.0, )"
+            },
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[13.0.3, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/opt/homebrew/Cellar/dotnet/7.0.100/libexec/sdk/7.0.100/RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

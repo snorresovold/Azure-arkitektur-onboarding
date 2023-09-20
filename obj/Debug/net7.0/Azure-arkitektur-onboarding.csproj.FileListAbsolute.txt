@@ -1,0 +1,5 @@
+/Users/snorrresovold/Documents/Fullstack/Azure-arkitektur-onboarding/obj/Debug/net7.0/Azure-arkitektur-onboarding.csproj.AssemblyReference.cache
+/Users/snorrresovold/Documents/Fullstack/Azure-arkitektur-onboarding/obj/Debug/net7.0/Azure-arkitektur-onboarding.GeneratedMSBuildEditorConfig.editorconfig
+/Users/snorrresovold/Documents/Fullstack/Azure-arkitektur-onboarding/obj/Debug/net7.0/Azure-arkitektur-onboarding.AssemblyInfoInputs.cache
+/Users/snorrresovold/Documents/Fullstack/Azure-arkitektur-onboarding/obj/Debug/net7.0/Azure-arkitektur-onboarding.AssemblyInfo.cs
+/Users/snorrresovold/Documents/Fullstack/Azure-arkitektur-onboarding/obj/Debug/net7.0/Azure-arkitektur-onboarding.csproj.CoreCompileInputs.cache
