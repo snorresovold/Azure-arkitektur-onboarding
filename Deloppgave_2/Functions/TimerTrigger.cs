@@ -25,7 +25,8 @@ namespace Zebra.Function
             _logger.LogInformation($"C# Timer trigger function executed at: {DateTime.Now}");
             (Container container, Database db) = await CosmosHandler.Init();
             dynamic x = CosmosHandler.GenerateRandomProduct();
-            CosmosHandler.CreateTimeTrackingEntry(x, container);
+            await CosmosHandler.CreateTimeTrackingEntry(x, container);
+            Console.WriteLine(x.category);
         }
     }
 

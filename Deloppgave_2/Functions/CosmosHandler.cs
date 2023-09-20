@@ -2,14 +2,19 @@ using Microsoft.Azure.Cosmos;
 using Microsoft.Extensions.Logging;
 public class CosmosHandler
 {
+    private static CosmosClient _client;
+
+    static CosmosHandler()
+    {
+        _client = new CosmosClient(
+            accountEndpoint: Environment.GetEnvironmentVariable("CosmosDbConnectionString")!,
+            authKeyOrResourceToken: Environment.GetEnvironmentVariable("CosmosKey")!
+        );
+    }
     public static async Task<(Container, Database)> Init()
     {
-        using CosmosClient client = new(
-                accountEndpoint: Environment.GetEnvironmentVariable("CosmosDbConnectionString")!,
-                authKeyOrResourceToken: Environment.GetEnvironmentVariable("CosmosKey")!
-            );
         // New instance of Database response class referencing the server-side database
-        DatabaseResponse response = await client.CreateDatabaseIfNotExistsAsync(
+        DatabaseResponse response = await _client.CreateDatabaseIfNotExistsAsync(
             id: "TimeTrackingEntries"
         );
         // Parse additional response properties
@@ -25,9 +30,8 @@ public class CosmosHandler
     }
     public async static Task<Product> CreateTimeTrackingEntry(Product item, Container container)
     {
-        Product createdItem = await container.CreateItemAsync(
-            item: item,
-            partitionKey: new PartitionKey(item.category)
+        Product createdItem = await container.UpsertItemAsync(
+            item: item
         );
         return createdItem;
     }
