@@ -2,7 +2,7 @@ using Microsoft.Azure.Cosmos;
 using Microsoft.Extensions.Logging;
 public class CosmosHandler
 {
-    public async Task<(Container, Database)> Init()
+    public static async Task<(Container, Database)> Init()
     {
         using CosmosClient client = new(
                 accountEndpoint: Environment.GetEnvironmentVariable("CosmosDbConnectionString")!,
@@ -23,8 +23,7 @@ public class CosmosHandler
         Container container = response2.Container;
         return (container, database);
     }
-    // fix this after lunsh :smile:
-    public async Task<Product> CreateTimeTrackingEntry(Product item, Container container)
+    public async static Task<Product> CreateTimeTrackingEntry(Product item, Container container)
     {
         Product createdItem = await container.CreateItemAsync(
             item: item,
@@ -33,7 +32,7 @@ public class CosmosHandler
         return createdItem;
     }
 
-    public Product GenerateRandomProduct()
+    public static Product GenerateRandomProduct()
     {
         Random random = new Random();
         string id = random.Next(1, 1000).ToString(); // Generating a random number between 1 and 1000 for id
