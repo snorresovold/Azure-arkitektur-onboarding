@@ -11,7 +11,7 @@ namespace Zebra.Function
         public TimerTrigger(ILoggerFactory loggerFactory)
         {
             _logger = loggerFactory.CreateLogger<TimerTrigger>();
-            _cosmosHandler = new CosmosHandler(_logger);
+            _cosmosHandler = new CosmosHandler();
         }
         [Function("TimerTrigger")]
         public async Task RunAsync([TimerTrigger("*/10 * * * * *")] MyInfo myTimer)

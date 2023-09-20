@@ -2,14 +2,6 @@ using Microsoft.Azure.Cosmos;
 using Microsoft.Extensions.Logging;
 public class CosmosHandler
 {
-    private readonly ILogger _logger;
-    public ILogger Logger { get; }
-
-
-    public CosmosHandler(ILogger logger)
-    {
-        _logger = logger;
-    }
     public async Task<(Container, Database)> Init()
     {
         using CosmosClient client = new(
@@ -38,7 +30,6 @@ public class CosmosHandler
             item: item,
             partitionKey: new PartitionKey(item.category)
         );
-        _logger.LogInformation(createdItem.ToString());
         return createdItem;
     }
 
