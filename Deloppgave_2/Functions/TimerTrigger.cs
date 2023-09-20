@@ -26,7 +26,7 @@ namespace Zebra.Function
             (Container container, Database db) = await CosmosHandler.Init();
             dynamic x = CosmosHandler.GenerateRandomProduct();
             await CosmosHandler.CreateTimeTrackingEntry(x, container);
-            Console.WriteLine(x.category);
+            _ = await CosmosHandler.ReadTimeTrackingEntry(container, "1");
         }
     }
 

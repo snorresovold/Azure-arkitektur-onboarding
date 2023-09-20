@@ -36,6 +36,15 @@ public class CosmosHandler
         return createdItem;
     }
 
+    public async static Task ReadTimeTrackingEntry<Product>(Container container, string id)
+    {
+        Product readItem = await container.ReadItemAsync<Product>(
+            id: "1",
+            partitionKey: new PartitionKey("category")
+        );
+        Console.WriteLine(readItem);
+    }
+
     public static Product GenerateRandomProduct()
     {
         Random random = new Random();
