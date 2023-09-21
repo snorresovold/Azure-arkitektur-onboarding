@@ -1,5 +1,3 @@
-using Azure.Core;
-
 public class RequestObject
 {
     public int Id { get; set; }
