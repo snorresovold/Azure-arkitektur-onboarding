@@ -25,14 +25,8 @@ namespace Zebra.Function
         {
             _logger.LogInformation($"C# Timer trigger function executed at: {DateTime.Now}");
             (Container container, Database db) = await CosmosHandler.Init();
-            // dynamic item = CosmosHandler.GenerateRandomProduct();
-            // await CosmosHandler.CreateTimeTrackingEntry(item, container);
-            TimeTrackingEntry data = await CosmosHandler.ReadTimeTrackingEntry<TimeTrackingEntry>(container, "1", "Sindre Langeveld");
-            string[] ids = { "1", "2", "3", "4" };
-            List<string> idList = ids.ToList();
+            List<string> idList = new List<string> { "1", "2", "3", "4" };
             List<TimeTrackingEntry> result = await CosmosHandler.ReadMultipleEntries<TimeTrackingEntry>(container, idList, "Sindre Langeveld");
-
-            _logger.LogInformation(data.ActivityCode);
         }
     }
 
