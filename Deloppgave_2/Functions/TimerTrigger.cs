@@ -9,7 +9,6 @@ namespace Zebra.Function
     public class TimerTrigger
     {
         private readonly ILogger _logger;
-        private static CosmosHandler _cosmosHandler;
         private readonly POGApiClient _pogApiClient;
 
         public TimerTrigger(ILoggerFactory loggerFactory)
@@ -17,10 +16,6 @@ namespace Zebra.Function
         {
             _logger = loggerFactory.CreateLogger<TimerTrigger>();
             _pogApiClient = new POGApiClient(_logger);
-            if (_cosmosHandler == null)
-            {
-                _cosmosHandler = new CosmosHandler();
-            }
         }
 
         [Function("TimerTrigger")]
@@ -49,7 +44,6 @@ namespace Zebra.Function
         public MyScheduleStatus ScheduleStatus { get; set; }
         public bool IsPastDue { get; set; }
     }
-
     public class MyScheduleStatus
     {
         public DateTime Last { get; set; }
