@@ -23,9 +23,8 @@ namespace Zebra.Function
         {
             _logger.LogInformation($"C# Timer trigger function executed at: {DateTime.Now}");
             (Container container, Database db) = await CosmosHandler.Init();
-            List<string> idList = new List<string> { "1", "2", "3", "4" };
+            List<string> idList = new List<string> { "1", "2", "3", "4", "5" };
             List<TimeTrackingEntry> result = await CosmosHandler.ReadMultipleEntries<TimeTrackingEntry>(container, idList, "Sindre Langeveld");
-            
            List<RequestObject> requestObjects = result.Select(entry => new RequestObject
             {
                 Id = int.Parse(entry.id),
@@ -53,12 +52,9 @@ namespace Zebra.Function
             string pogEndnpoint = Environment.GetEnvironmentVariable("pogEndpoint");
             string clientId = Environment.GetEnvironmentVariable("clientId");
             string clientSecret = Environment.GetEnvironmentVariable("clientSecret");
-
-
             string accessToken = await _pogApiClient.GetAccessTokenAsync(pogEndnpoint,
                                                                          clientId,
                                                                          clientSecret);
-
             await _pogApiClient.PostTimeTrackingEntriesAsync(requestObjects, accessToken);
             _logger.LogInformation("Sent: " + requestObjects + "to backend.");
         }
