@@ -10,10 +10,13 @@ namespace Zebra.Function
     {
         private readonly ILogger _logger;
         private static CosmosHandler _cosmosHandler;
+        private readonly POGApiClient _pogApiClient;
 
         public TimerTrigger(ILoggerFactory loggerFactory)
+        
         {
             _logger = loggerFactory.CreateLogger<TimerTrigger>();
+            _pogApiClient = new POGApiClient(_logger);
             if (_cosmosHandler == null)
             {
                 _cosmosHandler = new CosmosHandler();
@@ -27,6 +30,17 @@ namespace Zebra.Function
             (Container container, Database db) = await CosmosHandler.Init();
             List<string> idList = new List<string> { "1", "2", "3", "4" };
             List<TimeTrackingEntry> result = await CosmosHandler.ReadMultipleEntries<TimeTrackingEntry>(container, idList, "Sindre Langeveld");
+            
+            string pogEndnpoint = Environment.GetEnvironmentVariable("pogEndpoint");
+            string clientId = Environment.GetEnvironmentVariable("clientId");
+            string clientSecret = Environment.GetEnvironmentVariable("clientSecret");
+
+
+            string accessToken = await _pogApiClient.GetAccessTokenAsync(pogEndnpoint,
+                                                                         clientId,
+                                                                         clientSecret);
+
+            await _pogApiClient.PostTimeTrackingEntriesAsync(requestObjects, accessToken);
         }
     }
 
