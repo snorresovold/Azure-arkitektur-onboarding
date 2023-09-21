@@ -29,7 +29,8 @@ namespace Zebra.Function
             // await CosmosHandler.CreateTimeTrackingEntry(item, container);
             TimeTrackingEntry data = await CosmosHandler.ReadTimeTrackingEntry<TimeTrackingEntry>(container, "1", "Sindre Langeveld");
             string[] ids = { "1", "2", "3", "4" };
-            List<TimeTrackingEntry> result = await CosmosHandler.ReadMultipleEntries<TimeTrackingEntry>(container, ids, "Sindre Langeveld");
+            List<string> idList = ids.ToList();
+            List<TimeTrackingEntry> result = await CosmosHandler.ReadMultipleEntries<TimeTrackingEntry>(container, idList, "Sindre Langeveld");
 
             _logger.LogInformation(data.ActivityCode);
         }
