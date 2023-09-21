@@ -22,7 +22,7 @@ public class CosmosHandler
         // New instance of Container class referencing the server-side container
         ContainerResponse response2 = await database.CreateContainerIfNotExistsAsync(
             id: "TimeTrackingList",
-            partitionKeyPath: "/category"
+            partitionKeyPath: "/Consultant"
         );
         // Parse additional response properties
         Container container = response2.Container;
@@ -36,15 +36,41 @@ public class CosmosHandler
         return createdItem;
     }
 
-    public async static Task ReadTimeTrackingEntry<Product>(Container container, string id)
+public async static Task<T> ReadTimeTrackingEntry<T>(Container container, string id, string partitionKey)
+{
+    T readItem = await container.ReadItemAsync<T>(
+        id: id,
+        partitionKey: new PartitionKey(partitionKey)
+    );
+    Console.WriteLine(readItem);
+    return readItem;
+}
+
+public async static Task<List<TimeTrackingEntry>> ReadMultipleEntries<T>(Container container, List<string> ids, string partition){
+    // Create partition key object
+    PartitionKey partitionKey = new(partition);
+
+    // Create list of tuples for each item
+    List<(string, PartitionKey)> itemsToFind = new(){};
+    foreach (var id in ids)
     {
-        Product readItem = await container.ReadItemAsync<Product>(
-            id: "1",
-            partitionKey: new PartitionKey("category")
-        );
-        Console.WriteLine(readItem);
+        itemsToFind.Add((id, partitionKey));
     }
 
+
+    // Read multiple items
+    FeedResponse<TimeTrackingEntry> feedResponse = await container.ReadManyItemsAsync<TimeTrackingEntry>(
+        items: itemsToFind
+    );
+
+
+    foreach (TimeTrackingEntry item in feedResponse)
+    {
+        Console.WriteLine($"Found item:\t{item.Account}");
+    }
+    List<TimeTrackingEntry> resultList = feedResponse.ToList();
+    return resultList;
+}
     public static Product GenerateRandomProduct()
     {
         Random random = new Random();
@@ -58,5 +84,6 @@ public class CosmosHandler
 
         return new Product(id, category, name, quantity, sale);
     }
+
     public record Product(string id, string category, string name, int quantity, bool sale);
 }

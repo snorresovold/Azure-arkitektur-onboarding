@@ -2,6 +2,7 @@ using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 using Microsoft.Azure.Cosmos;
 using System;
+using static CosmosHandler;
 
 namespace Zebra.Function
 {
@@ -24,9 +25,13 @@ namespace Zebra.Function
         {
             _logger.LogInformation($"C# Timer trigger function executed at: {DateTime.Now}");
             (Container container, Database db) = await CosmosHandler.Init();
-            dynamic x = CosmosHandler.GenerateRandomProduct();
-            await CosmosHandler.CreateTimeTrackingEntry(x, container);
-            _ = await CosmosHandler.ReadTimeTrackingEntry(container, "1");
+            // dynamic item = CosmosHandler.GenerateRandomProduct();
+            // await CosmosHandler.CreateTimeTrackingEntry(item, container);
+            TimeTrackingEntry data = await CosmosHandler.ReadTimeTrackingEntry<TimeTrackingEntry>(container, "1", "Sindre Langeveld");
+            string[] ids = { "1", "2", "3", "4" };
+            List<TimeTrackingEntry> result = await CosmosHandler.ReadMultipleEntries<TimeTrackingEntry>(container, ids, "Sindre Langeveld");
+
+            _logger.LogInformation(data.ActivityCode);
         }
     }
 
