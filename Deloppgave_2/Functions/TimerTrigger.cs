@@ -56,8 +56,19 @@ namespace Zebra.Function
                                                                          clientId,
                                                                          clientSecret);
             await _pogApiClient.PostTimeTrackingEntriesAsync(requestObjects, accessToken);
-            _logger.LogInformation("Sent: " + requestObjects + "to backend.");
+            _logger.LogInformation("Sent: " + requestObjects + "CosmosDB.");
         }
+        static string ConvertDateFormat(string inputDate)
+    {
+        // Parse the input date string
+        DateTime originalDate = DateTime.ParseExact(inputDate, "M/d/yyyy h:mm:ss tt", null);
+
+        // Convert it to the desired format
+        string convertedDate = originalDate.ToString("yyyy-MM-dd");
+
+        return convertedDate;
+    }
+
     }
 
     public class MyInfo
