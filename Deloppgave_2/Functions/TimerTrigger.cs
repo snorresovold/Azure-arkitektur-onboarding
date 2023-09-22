@@ -25,7 +25,7 @@ namespace Zebra.Function
             (Container container, Database db) = await CosmosHandler.Init();
             List<string> idList = new List<string> { "1", "2", "3", "4", "5" };
             List<TimeTrackingEntry> result = await CosmosHandler.ReadMultipleEntries<TimeTrackingEntry>(container, idList, "Sindre Langeveld");
-           List<RequestObject> requestObjects = result.Select(entry => new RequestObject
+            List<RequestObject> requestObjects = result.Select(entry => new RequestObject
             {
                 Id = int.Parse(entry.id),
                 ActivityCode = entry.ActivityCode,
