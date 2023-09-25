@@ -38,14 +38,14 @@ public class CosmosHandler
         return (container, database);
     }
 
-    // public async static Task<Product> CreateTimeTrackingEntry(Product item, Container container)
-    // {
-    //     Product createdItem = await container.UpsertItemAsync(
-    //         item: item
-    //     );
+    public async static Task<Product> CreateTimeTrackingEntry(Product item, Container container)
+    {
+        Product createdItem = await container.UpsertItemAsync(
+            item: item
+        );
 
-    //     return createdItem;
-    // }
+        return createdItem;
+    }
 
     public async static Task<T> ReadTimeTrackingEntry<T>(Container container, string id, string partitionKey)
     {
@@ -86,22 +86,22 @@ public class CosmosHandler
         return resultList;
     }
 
-    // public static Product GenerateRandomProduct()
-    // {
-    //     Random random = new Random();
-    //     string id = random.Next(1, 1000).ToString(); // Generating a random number between 1 and 1000 for id
+    public static Product GenerateRandomProduct()
+    {
+        Random random = new Random();
+        string id = random.Next(1, 1000).ToString(); // Generating a random number between 1 and 1000 for id
 
-    //     string[] categories = { "gear-surf-surfboards", "jetskis", "catalouges" }; // List of possible categories
-    //     string category = categories[random.Next(categories.Length)]; // Selecting a random category from the list
+        string[] categories = { "gear-surf-surfboards", "jetskis", "catalouges" }; // List of possible categories
+        string category = categories[random.Next(categories.Length)]; // Selecting a random category from the list
 
-    //     string[] names = { "Sunnox Surfboard", "jetski", "catalouge" }; // List of possible names
-    //     string name = names[random.Next(names.Length)]; // Selecting a random name from the list
+        string[] names = { "Sunnox Surfboard", "jetski", "catalouge" }; // List of possible names
+        string name = names[random.Next(names.Length)]; // Selecting a random name from the list
 
-    //     int quantity = random.Next(1, 11); // Generating a random number between 1 and 10 for quantity
-    //     bool sale = random.Next(2) == 0; // Generating a random boolean value for sale (true or false)
+        int quantity = random.Next(1, 11); // Generating a random number between 1 and 10 for quantity
+        bool sale = random.Next(2) == 0; // Generating a random boolean value for sale (true or false)
 
-    //     return new Product(id, category, name, quantity, sale);
-    // }
+        return new Product(id, category, name, quantity, sale);
+    }
 
-    // public record Product(string id, string category, string name, int quantity, bool sale);
+    public record Product(string id, string category, string name, int quantity, bool sale);
 }
