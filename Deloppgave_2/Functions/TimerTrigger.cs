@@ -1,8 +1,7 @@
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 using Microsoft.Azure.Cosmos;
-using System;
-using static CosmosHandler;
+
 
 namespace Zebra.Function
 {
