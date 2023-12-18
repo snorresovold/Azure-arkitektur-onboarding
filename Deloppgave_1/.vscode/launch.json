@@ -1,11 +1,18 @@
+
 {
     "version": "0.2.0",
     "configurations": [
-        {
-            "name": "Attach to .NET Functions",
-            "type": "coreclr",
-            "request": "attach",
-            "processId": "${command:azureFunctions.pickProcess}"
-        }
+      {
+        "name": "C#: xUnit Http Trigger Volume Test",
+        "type": "dotnet",
+        "request": "launch",
+        "projectPath": "/Users/snorresovold/Documents/GitHub/Azure-arkitektur-onboarding/Deloppgave_1/Tests/Tests.csproj"
+      },
+      {
+        "name": "Attach to .NET Functions",
+        "type": "coreclr",
+        "request": "attach",
+        "processId": "${command:azureFunctions.pickProcess}"
+      }  
     ]
-}
+  }
