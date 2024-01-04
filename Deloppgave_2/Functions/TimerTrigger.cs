@@ -67,9 +67,7 @@ namespace Zebra.Function
 
         return convertedDate;
     }
-
     }
-
     public class MyInfo
     {
         public MyScheduleStatus ScheduleStatus { get; set; }
