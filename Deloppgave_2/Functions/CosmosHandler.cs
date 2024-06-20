@@ -18,21 +18,17 @@ public class CosmosHandler
 
     public static async Task<(Container, Database)> Init()
     {
-        // New instance of Database response class referencing the server-side database
         DatabaseResponse response = await _client.CreateDatabaseIfNotExistsAsync(
             id: "TimeTrackingEntries"
         );
 
-        // Parse additional response properties
         Database database = response.Database;
 
-        // New instance of Container class referencing the server-side container
         ContainerResponse response2 = await database.CreateContainerIfNotExistsAsync(
             id: "TimeTrackingList",
             partitionKeyPath: "/Consultant"
         );
 
-        // Parse additional response properties
         Container container = response2.Container;
 
         return (container, database);

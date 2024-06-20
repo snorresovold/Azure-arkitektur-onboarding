@@ -19,7 +19,6 @@ public class POGApiClient
 
     }
 
-
     public POGApiClient(ILogger logger, string pogEndpoint, string clientId, string clientSecret)
     {
         _logger = logger;
@@ -44,7 +43,6 @@ public class POGApiClient
             };
             httpTokenClient.DefaultRequestHeaders.Add("Authorization", "Basic " + basicAuthEncoded);
 
-            // Add the necessary data for the request
             HttpContent data = new FormUrlEncodedContent(new Dictionary<string, string>
             {
                 {"grant_type", "client_credentials"}
@@ -60,7 +58,7 @@ public class POGApiClient
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error getting access token");
-            throw; // Rethrow the exception for handling in the caller
+            throw; 
         }
     }
 
